@@ -44,7 +44,37 @@ export default function Transactions() {
 
   return (
     <section className="space-y-6">
-     
+        <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-slate-800">Riwayat Transaksi Penjualan</h1>
+          <p className="text-xs text-slate-500">Daftar transaksi dan verifikasi pembayaran kasir</p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+          {/* Filter Status */}
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="w-full sm:w-auto text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl outline-none"
+          >
+            <option value="all">Semua Status</option>
+            <option value="paid">Lunas (Paid)</option>
+            <option value="due">Belum Lunas (Due)</option>
+          </select>
+
+          {/* Search Box */}
+          <div className="relative w-full sm:w-56">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              placeholder="Cari No. Invoice..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-8 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl outline-none"
+            />
+          </div>
+        </div>
+      </header>
     </section>
   );
 
