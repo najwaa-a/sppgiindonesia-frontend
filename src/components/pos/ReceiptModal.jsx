@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import Modal from '../common/Modal';
-import { Printer, CheckCircle2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Printer, ArrowRight } from 'lucide-react';
 
 export default function ReceiptModal({
   isOpen,

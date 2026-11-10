@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * Reusable Badge Component
  * Aligned with SPPGIndonesia corporate color palette: Deep Navy, Golden Yellow, Soft Cyan, etc.

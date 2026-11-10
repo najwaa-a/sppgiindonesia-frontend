@@ -1,28 +1,19 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ShoppingCart,
   Search,
-  Filter,
   Package,
-  Layers,
   Utensils,
   Box,
   Drumstick,
   Soup,
   Apple,
   Milk,
-  RotateCcw,
   Plus,
   Minus,
   Trash2,
-  CreditCard,
   Banknote,
-  QrCode,
-  Printer,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
   Flame,
   ArrowRight,
   Receipt,
@@ -32,7 +23,6 @@ import { getProducts, getCategories, processOrderStockDeduction } from '../../se
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import ErrorAlert from '../../components/ErrorAlert';
 import Badge from '../../components/common/Badge';
-import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { useToast } from '../../components/common/Toast';
 import PaymentModal from '../../components/pos/PaymentModal';

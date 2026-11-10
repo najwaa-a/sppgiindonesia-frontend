@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import ConfirmDialog from '../common/ConfirmDialog';
 import {
-  PackagePlus,
   AlertCircle,
   CheckCircle2,
   RotateCcw,
-  Save,
-  HelpCircle,
-  Flame,
-  Info
+  Save
 } from 'lucide-react';
 
 const INITIAL_FORM_STATE = {

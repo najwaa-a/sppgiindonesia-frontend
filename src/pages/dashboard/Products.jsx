@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   PackagePlus,
@@ -7,16 +7,10 @@ import {
   RefreshCw,
   Search,
   Filter,
-  CheckCircle2,
   AlertTriangle,
-  XCircle,
   Edit2,
   Trash2,
-  TrendingUp,
-  AlertCircle,
-  HelpCircle,
   RotateCcw,
-  Sparkles,
   Layers,
   Flame,
   Award
@@ -26,13 +20,11 @@ import {
   getCategories,
   addProduct,
   updateProduct,
-  deleteProduct,
-  resetProductsToDefault
+  deleteProduct
 } from '../../services/productService';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import ErrorAlert from '../../components/ErrorAlert';
 import Badge from '../../components/common/Badge';
-import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { useToast } from '../../components/common/Toast';
 import AddProductModal from '../../components/products/AddProductModal';
@@ -132,6 +124,11 @@ export default function Products() {
       setLoading(false);
     }
   };
+
+  // Trigger initial data load on component mount
+  useEffect(() => {
+    loadData();
+  }, []);
 
   // Calculate Metrics
   const metrics = useMemo(() => {

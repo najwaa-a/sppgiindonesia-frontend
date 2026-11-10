@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
-import { AlertCircle, CheckCircle2, Save } from 'lucide-react';
+import { AlertCircle, Save } from 'lucide-react';
 
 export default function EditProductModal({
   isOpen,

@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import {
   Banknote,
   QrCode,
   CreditCard,
   CheckCircle2,
-  AlertCircle,
-  Printer,
-  Sparkles,
-  ArrowRight
+  AlertCircle
 } from 'lucide-react';
 
 export default function PaymentModal({
