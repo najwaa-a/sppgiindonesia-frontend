@@ -230,3 +230,4 @@ export async function resetProductsToDefault() {
   localStorage.removeItem(STORAGE_KEY);
   return await getProducts({ forceRefresh: true });
 }
+
