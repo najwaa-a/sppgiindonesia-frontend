@@ -1,0 +1,39 @@
+[
+  {
+    "id": "all",
+    "name": "Semua Kategori",
+    "icon": "Utensils",
+    "count": 12
+  },
+  {
+    "id": "Paket Lengkap MBG",
+    "name": "Paket Lengkap MBG",
+    "icon": "Box",
+    "count": 4
+  },
+  {
+    "id": "Lauk Utama",
+    "name": "Lauk Utama",
+    "icon": "Drumstick",
+    "count": 2
+  },
+  {
+    "id": "Sayuran & Sup",
+    "name": "Sayuran & Sup",
+    "icon": "Soup",
+    "count": 2
+  },
+  {
+    "id": "Buah & Penutup",
+    "name": "Buah & Penutup",
+    "icon": "Apple",
+    "count": 2
+  },
+  {
+    "id": "Minuman Sehat",
+    "name": "Minuman Sehat",
+    "icon": "Milk",
+    "count": 2
+  }
+]
+
