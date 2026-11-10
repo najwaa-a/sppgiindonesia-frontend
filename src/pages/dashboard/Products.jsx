@@ -35,6 +35,7 @@ import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { useToast } from '../../components/common/Toast';
+import AddProductModal from '../../components/products/AddProductModal';
 
 export default function Products() {
   const { addToast } = useToast();
@@ -64,6 +65,19 @@ export default function Products() {
 
   const handleOpenDeleteDialog = (product) => {
     setDeleteDialogState({ isOpen: true, product, isDeleting: false });
+  };
+
+  // Add Product Handler with Safe Feedback
+  const handleAddProduct = async (productData) => {
+    try {
+      const created = await addProduct(productData);
+      setProducts((prev) => [created, ...prev]);
+      addToast(`Menu "${created.name}" berhasil didaftarkan ke katalog MBG!`, 'success');
+      return created;
+    } catch (err) {
+      addToast(err.message || 'Gagal menambahkan produk menu.', 'error');
+      throw err;
+    }
   };
 
   // Load Data
@@ -271,6 +285,121 @@ export default function Products() {
             </article>
           </section>
 
+          {/* Filter & Search Bar - Card Based UI */}
+          <section className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs space-y-3.5">
+            <header className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#0f172a]">
+                <Filter className="w-4 h-4 text-slate-500" />
+                <span>Pencarian &amp; Penyaringan Katalog</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] text-slate-500 font-medium">
+                  Menampilkan <strong className="text-slate-800">{filteredAndSortedProducts.length}</strong> dari {products.length} menu
+                </span>
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-1 hover:underline ml-2"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Reset Filter</span>
+                  </button>
+                )}
+              </div>
+            </header>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* Search Input */}
+              <div>
+                <label htmlFor="search-input" className="block text-[11px] font-bold text-slate-600 mb-1">
+                  Cari Nama Menu / SKU:
+                </label>
+                <div className="relative">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    id="search-input"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Contoh: Ayam Bakar, Bayam, PRD-001..."
+                    className="w-full text-xs pl-9 pr-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                      aria-label="Hapus kata kunci pencarian"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Category Select */}
+              <div>
+                <label htmlFor="category-filter" className="block text-[11px] font-bold text-slate-600 mb-1">
+                  Kategori Menu:
+                </label>
+                <select
+                  id="category-filter"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full text-xs px-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition text-slate-700"
+                >
+                  <option value="all">Semua Kategori</option>
+                  {categories
+                    .filter((c) => c.id !== 'all')
+                    .map((cat) => (
+                      <option key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              {/* Stock Status Filter */}
+              <div>
+                <label htmlFor="stock-status-filter" className="block text-[11px] font-bold text-slate-600 mb-1">
+                  Status Ketersediaan:
+                </label>
+                <select
+                  id="stock-status-filter"
+                  value={stockStatusFilter}
+                  onChange={(e) => setStockStatusFilter(e.target.value)}
+                  className="w-full text-xs px-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition text-slate-700"
+                >
+                  <option value="all">Semua Status Stok</option>
+                  <option value="in_stock">Tersedia Aman (&gt; 10 porsi)</option>
+                  <option value="low_stock">Stok Kritis / Menipis (1 - 10 porsi)</option>
+                  <option value="out_of_stock">Stok Habis (0 porsi)</option>
+                </select>
+              </div>
+
+              {/* Sort By */}
+              <div>
+                <label htmlFor="sort-by" className="block text-[11px] font-bold text-slate-600 mb-1">
+                  Urutkan Berdasarkan:
+                </label>
+                <select
+                  id="sort-by"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full text-xs px-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition text-slate-700"
+                >
+                  <option value="name-asc">Nama Menu (A - Z)</option>
+                  <option value="name-desc">Nama Menu (Z - A)</option>
+                  <option value="price-asc">Harga Termurah</option>
+                  <option value="price-desc">Harga Termahal</option>
+                  <option value="stock-desc">Stok Terbanyak</option>
+                  <option value="stock-asc">Stok Tersedikit</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
           {/* Products Inventory Table - Card Based UI */}
           <section className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
             {/* Table Card Header with Golden Yellow CTA */}
@@ -289,7 +418,7 @@ export default function Products() {
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(true)}
-                  className="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 transform active:scale-95"
+                  className="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 transform active:scale-95 cursor-pointer"
                 >
                   <Plus className="w-4 h-4 stroke-[2.5]" />
                   <span>+ Tambah Menu Baru</span>
@@ -429,7 +558,7 @@ export default function Products() {
                                 type="button"
                                 onClick={() => handleOpenEditModal(product)}
                                 aria-label={`Edit ${product.name}`}
-                                className="p-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition"
+                                className="p-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition cursor-pointer"
                                 title="Edit Menu"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
@@ -438,7 +567,7 @@ export default function Products() {
                                 type="button"
                                 onClick={() => handleOpenDeleteDialog(product)}
                                 aria-label={`Hapus ${product.name}`}
-                                className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                                className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer"
                                 title="Hapus Menu"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -474,119 +603,14 @@ export default function Products() {
               </div>
             </footer>
           </section>
-          <section className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs space-y-3.5">
-            <header className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#0f172a]">
-                <Filter className="w-4 h-4 text-slate-500" />
-                <span>Pencarian & Penyaringan Katalog</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] text-slate-500 font-medium">
-                  Menampilkan <strong className="text-slate-800">{filteredAndSortedProducts.length}</strong> dari {products.length} menu
-                </span>
-                {hasActiveFilters && (
-                  <button
-                    type="button"
-                    onClick={resetFilters}
-                    className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-1 hover:underline ml-2"
-                  >
-                    <RotateCcw className="w-3 h-3" />
-                    <span>Reset Filter</span>
-                  </button>
-                )}
-              </div>
-            </header>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {/* Search Input */}
-              <div>
-                <label htmlFor="search-input" className="block text-[11px] font-bold text-slate-600 mb-1">
-                  Cari Nama Menu / SKU:
-                </label>
-                <div className="relative">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input
-                    id="search-input"
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Contoh: Ayam Bakar, Bayam, PRD-001..."
-                    className="w-full text-xs pl-9 pr-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition"
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
-                      aria-label="Hapus kata kunci pencarian"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Category Select */}
-              <div>
-                <label htmlFor="category-filter" className="block text-[11px] font-bold text-slate-600 mb-1">
-                  Kategori Menu:
-                </label>
-                <select
-                  id="category-filter"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition text-slate-700"
-                >
-                  <option value="all">Semua Kategori</option>
-                  {categories
-                    .filter((c) => c.id !== 'all')
-                    .map((cat) => (
-                      <option key={cat.id} value={cat.name}>
-                        {cat.name}
-                      </option>
-                    ))}
-                </select>
-              </div>
-
-              {/* Stock Status Filter */}
-              <div>
-                <label htmlFor="stock-status-filter" className="block text-[11px] font-bold text-slate-600 mb-1">
-                  Status Ketersediaan:
-                </label>
-                <select
-                  id="stock-status-filter"
-                  value={stockStatusFilter}
-                  onChange={(e) => setStockStatusFilter(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition text-slate-700"
-                >
-                  <option value="all">Semua Status Stok</option>
-                  <option value="in_stock">Tersedia Aman (&gt; 10 porsi)</option>
-                  <option value="low_stock">Stok Kritis / Menipis (1 - 10 porsi)</option>
-                  <option value="out_of_stock">Stok Habis (0 porsi)</option>
-                </select>
-              </div>
-
-              {/* Sort By */}
-              <div>
-                <label htmlFor="sort-by" className="block text-[11px] font-bold text-slate-600 mb-1">
-                  Urutkan Berdasarkan:
-                </label>
-                <select
-                  id="sort-by"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50/70 border border-slate-300 rounded-lg outline-none focus:border-[#0f172a] focus:bg-white focus:ring-1 focus:ring-[#0f172a] transition text-slate-700"
-                >
-                  <option value="name-asc">Nama Menu (A - Z)</option>
-                  <option value="name-desc">Nama Menu (Z - A)</option>
-                  <option value="price-asc">Harga Termurah</option>
-                  <option value="price-desc">Harga Termahal</option>
-                  <option value="stock-desc">Stok Terbanyak</option>
-                  <option value="stock-asc">Stok Tersedikit</option>
-                </select>
-              </div>
-            </div>
-          </section>
+          {/* Add Product Modal Component */}
+          <AddProductModal
+            isOpen={isAddModalOpen}
+            onClose={() => setIsAddModalOpen(false)}
+            onSubmit={handleAddProduct}
+            categories={categories}
+          />
         </div>
       )}
     </div>
