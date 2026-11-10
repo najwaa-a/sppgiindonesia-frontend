@@ -35,6 +35,8 @@ import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { useToast } from '../../components/common/Toast';
+import PaymentModal from '../../components/pos/PaymentModal';
+import ReceiptModal from '../../components/pos/ReceiptModal';
 
 export default function POS() {
   const { addToast } = useToast();
@@ -54,6 +56,55 @@ export default function POS() {
   const [customerType, setCustomerType] = useState('siswa'); // 'siswa' | 'umum'
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [completedTransaction, setCompletedTransaction] = useState(null);
+  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
+
+  // Payment Confirmation & Stock Decrement
+  const handleConfirmPayment = async ({ method, cashReceived, change, customerType }) => {
+    try {
+      // 1. Process order stock decrement in service
+      const updatedProducts = await processOrderStockDeduction(cart);
+      setProducts(updatedProducts);
+
+      // 2. Build transaction record
+      const invoiceNo = `INV-MBG-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`;
+      const newTransaction = {
+        invoiceNo,
+        timestamp: new Date().toISOString(),
+        items: [...cart],
+        totalAmount: cartSummary.finalTotal,
+        totalItemsCount: cartSummary.totalItemsCount,
+        customerType,
+        paymentMethod: method,
+        cashReceived,
+        change
+      };
+
+      // 3. Store in local transactions history
+      try {
+        const transHistory = JSON.parse(localStorage.getItem('mbg_pos_transactions_v1') || '[]');
+        localStorage.setItem('mbg_pos_transactions_v1', JSON.stringify([newTransaction, ...transHistory]));
+      } catch (e) {
+        console.warn('Gagal menyimpan riwayat transaksi lokal:', e);
+      }
+
+      // 4. Open receipt modal and reset cart
+      setCompletedTransaction(newTransaction);
+      setIsPaymentModalOpen(false);
+      setIsReceiptModalOpen(true);
+      setCart([]);
+      addToast(`Transaksi ${invoiceNo} berhasil diselesaikan!`, 'success');
+    } catch (err) {
+      addToast(err.message || 'Gagal memproses transaksi.', 'error');
+      throw err;
+    }
+  };
+
+  const handleStartNewTransaction = () => {
+    setIsReceiptModalOpen(false);
+    setCompletedTransaction(null);
+    setCart([]);
+  };
 
   // Cart Calculations (Subtotal, Diskon, Total Akhir)
   const cartSummary = useMemo(() => {
@@ -621,6 +672,36 @@ export default function POS() {
           </aside>
         </div>
       )}
+
+      {/* Clear Cart Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showClearConfirm}
+        onClose={() => setShowClearConfirm(false)}
+        onConfirm={handleClearCart}
+        title="Kosongkan Keranjang Belanja?"
+        message="Seluruh pilihan menu yang ada di keranjang kasir saat ini akan dihapus. Apakah Anda yakin?"
+        confirmText="Ya, Kosongkan"
+        cancelText="Batal"
+        type="warning"
+      />
+
+      {/* POS Payment Modal */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        totalAmount={cartSummary.finalTotal}
+        totalItemsCount={cartSummary.totalItemsCount}
+        customerType={customerType}
+        onConfirmPayment={handleConfirmPayment}
+      />
+
+      {/* POS Printable Receipt Modal */}
+      <ReceiptModal
+        isOpen={isReceiptModalOpen}
+        onClose={() => setIsReceiptModalOpen(false)}
+        transaction={completedTransaction}
+        onNewTransaction={handleStartNewTransaction}
+      />
     </div>
   );
 }
