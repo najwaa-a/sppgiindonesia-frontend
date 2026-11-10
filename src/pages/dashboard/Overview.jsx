@@ -51,7 +51,24 @@ export default function Overview() {
   if (error) return <ErrorAlert message={error} onRetry={loadDashboardData} />;
   return (
     <section className="space-y-6">
-      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <article className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Penjualan</span>
+          <p className="text-2xl font-bold text-emerald-600 mt-2">
+            Rp {stats.totalIncome.toLocaleString('id-ID')}
+          </p>
+        </article>
+
+        <article className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pesanan</span>
+          <p className="text-2xl font-bold text-slate-800 mt-2">{stats.totalOrders} Transaksi</p>
+        </article>
+
+        <article className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Menu Tersedia</span>
+          <p className="text-2xl font-bold text-indigo-600 mt-2">{stats.totalProducts} Pilihan</p>
+        </article>
+      </div>
     </section>
   );
 }
