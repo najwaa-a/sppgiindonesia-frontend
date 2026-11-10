@@ -39,4 +39,7 @@ export default function Transactions() {
     return matchStatus && matchSearch;
   });
 
+  if (loading) return <LoadingSkeleton message="Memuat seluruh data transaksi penjualan..." />;
+  if (error) return <ErrorAlert message={error} onRetry={loadTransactions} />;
+
 }
