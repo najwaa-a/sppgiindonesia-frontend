@@ -16,7 +16,10 @@ export default function Overview() {
     loadDashboardData();
   }, []);
   async function loadDashboardData() {
-
+    try {
+     } catch (err) {
+    } finally {
+    }
   }
   return <></>;
 }
