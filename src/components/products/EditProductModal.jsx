@@ -307,3 +307,4 @@ export default function EditProductModal({
     </Modal>
   );
 }
+
