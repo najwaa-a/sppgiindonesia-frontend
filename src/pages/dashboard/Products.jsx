@@ -36,6 +36,7 @@ import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { useToast } from '../../components/common/Toast';
 import AddProductModal from '../../components/products/AddProductModal';
+import EditProductModal from '../../components/products/EditProductModal';
 
 export default function Products() {
   const { addToast } = useToast();
@@ -77,6 +78,35 @@ export default function Products() {
     } catch (err) {
       addToast(err.message || 'Gagal menambahkan produk menu.', 'error');
       throw err;
+    }
+  };
+
+  // Update Product Handler
+  const handleUpdateProduct = async (id, updatedData) => {
+    try {
+      const updated = await updateProduct(id, updatedData);
+      setProducts((prev) => prev.map((p) => (p.id === id ? updated : p)));
+      addToast(`Perubahan menu "${updated.name}" berhasil disimpan!`, 'success');
+      return updated;
+    } catch (err) {
+      addToast(err.message || 'Gagal memperbarui menu.', 'error');
+      throw err;
+    }
+  };
+
+  // Delete Product Handler
+  const handleConfirmDelete = async () => {
+    if (!deleteDialogState.product) return;
+    const target = deleteDialogState.product;
+    try {
+      setDeleteDialogState((prev) => ({ ...prev, isDeleting: true }));
+      await deleteProduct(target.id);
+      setProducts((prev) => prev.filter((p) => p.id !== target.id));
+      addToast(`Menu "${target.name}" telah dihapus dari sistem.`, 'info');
+      setDeleteDialogState({ isOpen: false, product: null, isDeleting: false });
+    } catch (err) {
+      addToast(err.message || 'Gagal menghapus produk.', 'error');
+      setDeleteDialogState((prev) => ({ ...prev, isDeleting: false }));
     }
   };
 
@@ -610,6 +640,31 @@ export default function Products() {
             onClose={() => setIsAddModalOpen(false)}
             onSubmit={handleAddProduct}
             categories={categories}
+          />
+
+          {/* Edit Product Modal Component */}
+          <EditProductModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setSelectedProduct(null);
+            }}
+            onSubmit={handleUpdateProduct}
+            product={selectedProduct}
+            categories={categories}
+          />
+
+          {/* Delete Product Confirmation Dialog */}
+          <ConfirmDialog
+            isOpen={deleteDialogState.isOpen}
+            onClose={() => setDeleteDialogState({ isOpen: false, product: null, isDeleting: false })}
+            onConfirm={handleConfirmDelete}
+            title="Hapus Menu MBG"
+            message={`Apakah Anda yakin ingin menghapus "${deleteDialogState.product?.name}" (${deleteDialogState.product?.id}) dari database? Tindakan ini tidak dapat dibatalkan.`}
+            confirmText="Ya, Hapus Menu"
+            cancelText="Batal"
+            type="danger"
+            isLoading={deleteDialogState.isDeleting}
           />
         </div>
       )}
