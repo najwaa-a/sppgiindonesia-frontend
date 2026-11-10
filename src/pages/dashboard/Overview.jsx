@@ -15,5 +15,8 @@ export default function Overview() {
   useEffect(() => {
     loadDashboardData();
   }, []);
+  async function loadDashboardData() {
+
+  }
   return <></>;
 }
