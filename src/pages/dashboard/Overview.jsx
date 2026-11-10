@@ -49,5 +49,9 @@ export default function Overview() {
   
   if (loading) return <LoadingSkeleton message="Memuat metrik dashboard dari Supabase..." />;
   if (error) return <ErrorAlert message={error} onRetry={loadDashboardData} />;
-  return <></>;
+  return (
+    <section className="space-y-6">
+      
+    </section>
+  );
 }
