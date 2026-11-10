@@ -1,1 +1,23 @@
 @import 'tailwindcss';
+
+@layer utilities {
+  /* SPPGIndonesia Corporate Theme Custom Utilities */
+  :root {
+    --deep-navy: #0f172a;
+    --golden-yellow: #f59e0b;
+    --pure-white: #ffffff;
+    --light-gray: #f8fafc;
+    --dark-charcoal: #1e293b;
+    --soft-cyan: #0ea5e9;
+  }
+}
+
+/* Print styling for Thermal POS Receipts */
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+  header, aside, nav, footer, button {
+    display: none !important;
+  }
+}
