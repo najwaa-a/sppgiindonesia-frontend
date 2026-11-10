@@ -75,6 +75,12 @@ export default function Transactions() {
           </div>
         </div>
       </header>
+      
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          
+        </div>
+      </div>
     </section>
   );
 
