@@ -15,4 +15,22 @@ export default function Transactions() {
     loadTransactions();
   }, []);
 
+  async function loadTransactions() {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setTransactions(data || []);
+    } catch (err) {
+      setError(err.message || 'Gagal memuat daftar transaksi');
+    } finally {
+      setLoading(false);
+    }
+  }
+
 }
