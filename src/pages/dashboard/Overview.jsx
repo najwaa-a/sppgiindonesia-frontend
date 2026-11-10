@@ -27,6 +27,11 @@ export default function Overview() {
         .limit(5);
 
       if (transErr) throw transErr;
+      const { count: productCount, error: prodErr } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true });
+
+      if (prodErr) throw prodErr;
      } catch (err) {
     } finally {
     }
