@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "nama": "Nasi Ayam Panggang Madu & Jagung Manis",
+    "kategori": "Makanan Pokok",
+    "emoji": "🍗",
+    "warna": ["#ffd89b", "#f59e0b"],
+    "kalori": 520,
+    "protein": 29,
+    "karbohidrat": 68,
+    "lemak": 14,
+    "serat": 5,
+    "porsi": "1 piring (350 g): nasi 150 g, ayam panggang 80 g, jagung manis 60 g, lalapan 60 g",
+    "deskripsi": "Ayam dipanggang dengan olesan madu tanpa pengawet, disajikan bersama jagung manis dan lalapan segar."
+  },
+  {
+    "id": 2,
+    "nama": "Nasi Ikan Kakap Saus Tomat Segar & Brokoli",
+    "kategori": "Makanan Pokok",
+    "emoji": "🐟",
+    "warna": ["#bfe3ff", "#4d9bff"],
+    "kalori": 485,
+    "protein": 26,
+    "karbohidrat": 62,
+    "lemak": 12,
+    "serat": 6,
+    "porsi": "1 piring (340 g): nasi 150 g, ikan kakap 90 g, brokoli 70 g, saus tomat 30 g",
+    "deskripsi": "Fillet kakap kukus disiram saus tomat segar, dengan brokoli rebus renyah. Kaya omega-3."
+  },
+  {
+    "id": 3,
+    "nama": "Sayur Sop Daging Sapi & Bakso Rumahan",
+    "kategori": "Sayur",
+    "emoji": "🍲",
+    "warna": ["#c8f0d2", "#3fbf7f"],
+    "kalori": 230,
+    "protein": 16,
+    "karbohidrat": 24,
+    "lemak": 8,
+    "serat": 4,
+    "porsi": "1 mangkuk (300 ml): kuah kaldu, wortel, kentang, buncis, daging sapi 50 g",
+    "deskripsi": "Sop hangat berisi sayuran segar dan bakso rumahan, dimasak dengan kaldu alami."
+  },
+  {
+    "id": 4,
+    "nama": "Aneka Buah Segar Potong Tropis Pilihan",
+    "kategori": "Buah",
+    "emoji": "🍉",
+    "warna": ["#ffd0d6", "#ff6b81"],
+    "kalori": 110,
+    "protein": 2,
+    "karbohidrat": 27,
+    "lemak": 1,
+    "serat": 3,
+    "porsi": "1 cup (150 g): semangka, melon, pepaya",
+    "deskripsi": "Potongan buah tropis lokal dari kelompok tani mitra, disajikan dingin."
+  },
+  {
+    "id": 5,
+    "nama": "Paket Nasi Bento MBG Lengkap 4 Sehat",
+    "kategori": "Makanan Pokok",
+    "emoji": "🍱",
+    "warna": ["#e3d4ff", "#8b6cf0"],
+    "kalori": 610,
+    "protein": 34,
+    "karbohidrat": 74,
+    "lemak": 18,
+    "serat": 7,
+    "porsi": "1 kotak bento (420 g): nasi, lauk hewani, lauk nabati, sayur, buah",
+    "deskripsi": "Empat komponen gizi seimbang dalam satu kotak: karbohidrat, protein, sayur, dan buah."
+  }
+]
