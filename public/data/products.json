@@ -1,0 +1,147 @@
+[
+  {
+    "id": "PRD-001",
+    "name": "Paket Nasi Ayam Bakar & Sayur Bayam",
+    "category": "Paket Lengkap MBG",
+    "price": 15000,
+    "stock": 42,
+    "min_stock": 10,
+    "calories": 520,
+    "protein": "24g",
+    "description": "Paket standar gizi MBG: nasi putih pulen, ayam bakar kecap madu, sayur bening bayam jagung manis, dan buah pisang ambon.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-002",
+    "name": "Paket Nasi Ikan Kembung Balado & Capcay",
+    "category": "Paket Lengkap MBG",
+    "price": 14000,
+    "stock": 28,
+    "min_stock": 10,
+    "calories": 480,
+    "protein": "26g",
+    "description": "Kaya Omega-3 dan serat: nasi putih, ikan kembung bumbu balado lembut, capcay sayur segar, dan potongan semangka merah.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-003",
+    "name": "Paket Nasi Telur Dadar Sayur & Tempe Orek",
+    "category": "Paket Lengkap MBG",
+    "price": 12000,
+    "stock": 6,
+    "min_stock": 10,
+    "calories": 450,
+    "protein": "18g",
+    "description": "Menu hemat kaya protein nabati & hewani: telur dadar sayur tebal, orek tempe manis gurih, tumis buncis, dan jeruk manis.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-004",
+    "name": "Paket Nasi Daging Sapi Cincang & Sup Wortel",
+    "category": "Paket Lengkap MBG",
+    "price": 18500,
+    "stock": 18,
+    "min_stock": 8,
+    "calories": 560,
+    "protein": "28g",
+    "description": "Kaya zat besi untuk pencegahan anemia: daging sapi cincang bumbu semur, sup wortel kembang kol, dan apel malang.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-005",
+    "name": "Ayam Suwir Gurih Daun Jeruk (Porsi Lauk)",
+    "category": "Lauk Utama",
+    "price": 7500,
+    "stock": 35,
+    "min_stock": 10,
+    "calories": 210,
+    "protein": "19g",
+    "description": "Dada ayam fillet disuwir berbumbu rempah nusantara dengan aroma daun jeruk segar tanpa MSG berlebih.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-006",
+    "name": "Tahu & Tempe Bacem Gula Aren",
+    "category": "Lauk Utama",
+    "price": 4000,
+    "stock": 50,
+    "min_stock": 15,
+    "calories": 160,
+    "protein": "12g",
+    "description": "Sepasang tahu sutra dan tempe kedelai lokal yang dimasak bacem dengan gula aren organik murni.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-007",
+    "name": "Sayur Bening Bayam Jagung Manis",
+    "category": "Sayuran & Sup",
+    "price": 4500,
+    "stock": 24,
+    "min_stock": 8,
+    "calories": 85,
+    "protein": "4g",
+    "description": "Bayam hijau segar petikan lokal dipadu jagung manis pipil renyah dalam kuah temu kunci yang menghangatkan.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-008",
+    "name": "Sup Ayam Makaroni & Jamur Kuping",
+    "category": "Sayuran & Sup",
+    "price": 6000,
+    "stock": 4,
+    "min_stock": 10,
+    "calories": 140,
+    "protein": "9g",
+    "description": "Kaldu ayam kampung asli dengan potongan wortel dadu, makaroni gandum, seledri, dan jamur kuping.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-009",
+    "name": "Potongan Buah Segar (Melon & Semangka)",
+    "category": "Buah & Penutup",
+    "price": 4000,
+    "stock": 30,
+    "min_stock": 10,
+    "calories": 60,
+    "protein": "1g",
+    "description": "Cup buah dingin higienis berisikan melon hijau dan semangka merah potong dadu siap santap.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-010",
+    "name": "Puding Susu Kedelai Stroberi",
+    "category": "Buah & Penutup",
+    "price": 5000,
+    "stock": 0,
+    "min_stock": 10,
+    "calories": 110,
+    "protein": "5g",
+    "description": "Puding kalsium tinggi berbahan sari kedelai alami dengan puree stroberi segar tanpa pemanis buatan.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-011",
+    "name": "Susu UHT MBG Fortifikasi 200ml",
+    "category": "Minuman Sehat",
+    "price": 5000,
+    "stock": 65,
+    "min_stock": 20,
+    "calories": 130,
+    "protein": "6g",
+    "description": "Susu sapi murni berfortifikasi vitamin D, kalsium, zink, dan asam folat sesuai standar Badan Gizi Nasional.",
+    "is_active": true
+  },
+  {
+    "id": "PRD-012",
+    "name": "Air Mineral Higienis MBG 330ml",
+    "category": "Minuman Sehat",
+    "price": 2500,
+    "stock": 110,
+    "min_stock": 30,
+    "calories": 0,
+    "protein": "0g",
+    "description": "Air mineral pegunungan terfiltrasi ozon bebas polutan untuk hidrasi optimal siswa.",
+    "is_active": true
+  }
+]
+
