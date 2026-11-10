@@ -4,7 +4,7 @@ export default function ErrorAlert({ message = "Gagal memuat data", onRetry }) {
   return (
     <div role="alert" className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-center justify-between text-rose-800 text-sm my-4">
       <div className="flex items-center space-x-3">
-        <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0" />
+        <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
         <span>{message}</span>
       </div>
       {onRetry && (
