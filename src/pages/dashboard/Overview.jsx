@@ -32,6 +32,14 @@ export default function Overview() {
         .select('*', { count: 'exact', head: true });
 
       if (prodErr) throw prodErr;
+      const income = (transData || []).reduce((acc, curr) => acc + parseFloat(curr.final_total || 0), 0);
+
+      setStats({
+        totalIncome: income,
+        totalOrders: (transData || []).length,
+        totalProducts: productCount || 0
+      });
+      setRecentOrders(transData || []);
      } catch (err) {
     } finally {
     }
