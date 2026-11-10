@@ -69,6 +69,46 @@ export default function Overview() {
           <p className="text-2xl font-bold text-indigo-600 mt-2">{stats.totalProducts} Pilihan</p>
         </article>
       </div>
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <header className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+          <h2 className="font-bold text-slate-800 text-base">5 Pesanan Penjualan Terkini</h2>
+        </header>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs text-slate-600">
+            <thead className="bg-slate-50 text-[10px] uppercase text-slate-400 font-semibold border-b">
+              <tr>
+                <th className="px-6 py-3">No. Invoice</th>
+                <th className="px-6 py-3">Tanggal</th>
+                <th className="px-6 py-3">Status Bayar</th>
+                <th className="px-6 py-3 text-right">Total Tagihan</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {recentOrders.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="text-center py-8 text-slate-400">Belum ada transaksi</td>
+                </tr>
+              ) : (
+                recentOrders.map(order => (
+                  <tr key={order.id} className="hover:bg-slate-50/50">
+                    <td className="px-6 py-4 font-semibold text-slate-800">{order.invoice_no}</td>
+                    <td className="px-6 py-4 text-xs">{new Date(order.created_at).toLocaleDateString('id-ID')}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${order.payment_status === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                        {order.payment_status || 'due'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right font-bold text-slate-800">
+                      Rp {Number(order.final_total || 0).toLocaleString('id-ID')}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
   );
 }
