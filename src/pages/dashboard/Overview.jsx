@@ -43,6 +43,7 @@ export default function Overview() {
      } catch (err) {
         setError(err.message || 'Gagal memuat data dashboard');
     } finally {
+        setLoading(false);
     }
   }
   return <></>;
