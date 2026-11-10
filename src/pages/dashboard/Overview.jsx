@@ -41,6 +41,7 @@ export default function Overview() {
       });
       setRecentOrders(transData || []);
      } catch (err) {
+        setError(err.message || 'Gagal memuat data dashboard');
     } finally {
     }
   }
