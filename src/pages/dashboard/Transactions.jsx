@@ -75,12 +75,24 @@ export default function Transactions() {
           </div>
         </div>
       </header>
-      
+
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          
+        <div className="overflow-x-auto">   
+            <table className="w-full text-left text-xs text-slate-600">
+                <thead className="bg-slate-50 text-[10px] uppercase text-slate-400 font-semibold border-b">
+              <tr>
+                <th className="px-5 py-3.5">ID</th>
+                <th className="px-5 py-3.5">No. Invoice</th>
+                <th className="px-5 py-3.5">Tanggal</th>
+                <th className="px-5 py-3.5">Status Pesanan</th>
+                <th className="px-5 py-3.5">Status Bayar</th>
+                <th className="px-5 py-3.5 text-right">Total Tagihan</th>
+              </tr>
+            </thead>
+            </table>
         </div>
       </div>
+
     </section>
   );
 
