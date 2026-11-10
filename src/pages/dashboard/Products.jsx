@@ -51,6 +51,21 @@ export default function Products() {
   const [stockStatusFilter, setStockStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name-asc');
 
+  // Modal States
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [deleteDialogState, setDeleteDialogState] = useState({ isOpen: false, product: null, isDeleting: false });
+
+  const handleOpenEditModal = (product) => {
+    setSelectedProduct(product);
+    setIsEditModalOpen(true);
+  };
+
+  const handleOpenDeleteDialog = (product) => {
+    setDeleteDialogState({ isOpen: true, product, isDeleting: false });
+  };
+
   // Load Data
   const loadData = async (isManualRefresh = false) => {
     try {
@@ -256,7 +271,209 @@ export default function Products() {
             </article>
           </section>
 
-          {/* Filter & Search Bar - Card Based UI */}
+          {/* Products Inventory Table - Card Based UI */}
+          <section className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+            {/* Table Card Header with Golden Yellow CTA */}
+            <header className="px-5 py-4 bg-[#0f172a] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                  <PackagePlus className="w-4 h-4 text-amber-400" />
+                  <span>Daftar Stok Produk Menu MBG</span>
+                </h2>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  Daftar resep aktif, status ketersediaan dapur, dan harga jual porsi siswa
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 transform active:scale-95"
+                >
+                  <Plus className="w-4 h-4 stroke-[2.5]" />
+                  <span>+ Tambah Menu Baru</span>
+                </button>
+              </div>
+            </header>
+
+            {/* Table Content */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+                    <th scope="col" className="py-3 px-4 w-24">Kode SKU</th>
+                    <th scope="col" className="py-3 px-4">Nama Menu &amp; Gizi MBG</th>
+                    <th scope="col" className="py-3 px-4">Kategori</th>
+                    <th scope="col" className="py-3 px-4 text-right">Harga Jual</th>
+                    <th scope="col" className="py-3 px-4 text-center">Stok Porsi</th>
+                    <th scope="col" className="py-3 px-4 text-center">Status</th>
+                    <th scope="col" className="py-3 px-4 text-center w-28">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredAndSortedProducts.length === 0 ? (
+                    <tr>
+                      <td colSpan="7" className="py-12 text-center text-slate-500">
+                        <div className="flex flex-col items-center justify-center max-w-sm mx-auto">
+                          <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3 text-slate-400">
+                            <Search className="w-6 h-6" />
+                          </div>
+                          <p className="font-semibold text-slate-700 text-sm">Tidak ada menu yang sesuai</p>
+                          <p className="text-xs text-slate-500 mt-1">
+                            Coba ubah kata kunci pencarian atau sesuaikan filter kategori dan status stok.
+                          </p>
+                          {hasActiveFilters && (
+                            <button
+                              type="button"
+                              onClick={resetFilters}
+                              className="mt-4 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition"
+                            >
+                              Reset Semua Filter
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredAndSortedProducts.map((product) => {
+                      const stock = Number(product.stock) || 0;
+                      const minStock = product.min_stock || 10;
+                      const isOutOfStock = stock === 0;
+                      const isLowStock = stock > 0 && stock <= minStock;
+
+                      return (
+                        <tr
+                          key={product.id}
+                          className="hover:bg-slate-50/70 transition-colors group"
+                        >
+                          {/* SKU */}
+                          <td className="py-3.5 px-4 font-mono font-bold text-slate-600 text-[11px]">
+                            {product.id}
+                          </td>
+
+                          {/* Name & Nutritional details */}
+                          <td className="py-3.5 px-4">
+                            <div className="font-semibold text-slate-900 text-xs sm:text-sm">
+                              {product.name}
+                            </div>
+                            <div className="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
+                              <span className="flex items-center gap-1 text-amber-600 font-medium">
+                                <Flame className="w-3 h-3" />
+                                {product.calories || 400} kkal
+                              </span>
+                              <span>•</span>
+                              <span className="text-sky-700 font-medium">
+                                Protein: {product.protein || '15g'}
+                              </span>
+                              {product.description && (
+                                <>
+                                  <span className="hidden md:inline">•</span>
+                                  <span className="hidden md:inline text-slate-400 truncate max-w-xs">
+                                    {product.description}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Category Badge */}
+                          <td className="py-3.5 px-4">
+                            <Badge variant="cyan" size="sm">
+                              {product.category}
+                            </Badge>
+                          </td>
+
+                          {/* Price */}
+                          <td className="py-3.5 px-4 text-right font-extrabold text-[#0f172a] text-xs sm:text-sm">
+                            {formatRupiah(product.price)}
+                          </td>
+
+                          {/* Stock Quantity */}
+                          <td className="py-3.5 px-4 text-center">
+                            <span
+                              className={`font-bold text-xs ${
+                                isOutOfStock
+                                  ? 'text-rose-600'
+                                  : isLowStock
+                                  ? 'text-amber-600'
+                                  : 'text-slate-800'
+                              }`}
+                            >
+                              {stock}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block">porsi</span>
+                          </td>
+
+                          {/* Stock Status Badge */}
+                          <td className="py-3.5 px-4 text-center">
+                            {isOutOfStock ? (
+                              <Badge variant="rose" size="xs" dot>
+                                Habis
+                              </Badge>
+                            ) : isLowStock ? (
+                              <Badge variant="amber" size="xs" dot>
+                                Stok Kritis
+                              </Badge>
+                            ) : (
+                              <Badge variant="emerald" size="xs" dot>
+                                Tersedia
+                              </Badge>
+                            )}
+                          </td>
+
+                          {/* Action Buttons */}
+                          <td className="py-3.5 px-4 text-center">
+                            <div className="flex items-center justify-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditModal(product)}
+                                aria-label={`Edit ${product.name}`}
+                                className="p-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition"
+                                title="Edit Menu"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleOpenDeleteDialog(product)}
+                                aria-label={`Hapus ${product.name}`}
+                                className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                                title="Hapus Menu"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Table Footer */}
+            <footer className="px-5 py-3 bg-slate-50/50 border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+              <span>
+                Total <strong>{products.length}</strong> menu terdaftar di sistem MBG.
+              </span>
+              <div className="flex items-center gap-4 text-[11px]">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  Tersedia Aman
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Stok Kritis (&le; 10)
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                  Habis
+                </span>
+              </div>
+            </footer>
+          </section>
           <section className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs space-y-3.5">
             <header className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div className="flex items-center gap-2 text-xs font-bold text-[#0f172a]">
