@@ -17,6 +17,16 @@ export default function Overview() {
   }, []);
   async function loadDashboardData() {
     try {
+        setLoading(true);
+      setError(null);
+
+      const { data: transData, error: transErr } = await supabase
+        .from('transactions')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (transErr) throw transErr;
      } catch (err) {
     } finally {
     }
