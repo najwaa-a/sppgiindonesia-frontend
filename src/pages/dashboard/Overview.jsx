@@ -8,6 +8,9 @@ export default function Overview() {
     const [recentOrders, setRecentOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null); 
+    useEffect(() => {
+    loadDashboardData();
+  }, []);
   return (
     <></>
   );
