@@ -33,4 +33,10 @@ export default function Transactions() {
     }
   }
 
+  const filtered = transactions.filter(t => {
+    const matchStatus = filterStatus === 'all' || t.payment_status === filterStatus;
+    const matchSearch = (t.invoice_no || '').toLowerCase().includes(search.toLowerCase());
+    return matchStatus && matchSearch;
+  });
+
 }
