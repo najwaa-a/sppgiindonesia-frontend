@@ -42,4 +42,10 @@ export default function Transactions() {
   if (loading) return <LoadingSkeleton message="Memuat seluruh data transaksi penjualan..." />;
   if (error) return <ErrorAlert message={error} onRetry={loadTransactions} />;
 
+  return (
+    <section className="space-y-6">
+     
+    </section>
+  );
+
 }
