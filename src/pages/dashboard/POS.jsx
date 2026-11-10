@@ -51,7 +51,28 @@ export default function POS() {
 
   // Cart State
   const [cart, setCart] = useState([]);
+  const [customerType, setCustomerType] = useState('siswa'); // 'siswa' | 'umum'
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  // Cart Calculations (Subtotal, Diskon, Total Akhir)
+  const cartSummary = useMemo(() => {
+    const totalItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+    const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    // Subsidi MBG jika pemesan adalah Siswa Program MBG (opsional potongan atau diskon)
+    const discount = customerType === 'siswa' ? 0 : 0; // Porsi normal terstandar
+    const tax = 0; // PPN 0% untuk program pangan pemerintah
+    const finalTotal = Math.max(0, subtotal - discount + tax);
+
+    return {
+      totalItemsCount,
+      subtotal,
+      discount,
+      tax,
+      finalTotal
+    };
+  }, [cart, customerType]);
 
   // Cart Actions
   const addToCart = (product) => {
@@ -432,11 +453,172 @@ export default function POS() {
           </div>
 
           {/* Right Column: Order Cart (Cols 9-12) */}
-          <div className="lg:col-span-4 space-y-4">
-            <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs text-xs text-slate-500">
-              Keranjang Kasir MBG
-            </div>
-          </div>
+          <aside aria-label="Keranjang Kasir MBG" className="lg:col-span-4 lg:sticky lg:top-18 space-y-4">
+            <section className="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col">
+              {/* Cart Header */}
+              <header className="px-4 py-3 bg-[#0f172a] text-white flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Receipt className="w-4 h-4 text-amber-400" />
+                  <h2 className="text-xs sm:text-sm font-bold text-white">
+                    Keranjang Kasir MBG
+                  </h2>
+                </div>
+                {cart.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowClearConfirm(true)}
+                    className="text-[11px] text-rose-300 hover:text-rose-100 flex items-center gap-1 transition cursor-pointer"
+                    title="Kosongkan seluruh isi keranjang"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Kosongkan</span>
+                  </button>
+                )}
+              </header>
+
+              {/* Customer Category Selector */}
+              <div className="p-3 bg-slate-50/80 border-b border-slate-100">
+                <label className="block text-[11px] font-bold text-slate-600 mb-1.5 flex items-center gap-1">
+                  <UserCheck className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Kategori Pemesan:</span>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setCustomerType('siswa')}
+                    className={`py-1.5 px-2 rounded-lg text-xs font-semibold text-center transition cursor-pointer ${
+                      customerType === 'siswa'
+                        ? 'bg-[#0f172a] text-white shadow-2xs'
+                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    Siswa MBG
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCustomerType('umum')}
+                    className={`py-1.5 px-2 rounded-lg text-xs font-semibold text-center transition cursor-pointer ${
+                      customerType === 'umum'
+                        ? 'bg-[#0f172a] text-white shadow-2xs'
+                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    Umum / Staf
+                  </button>
+                </div>
+              </div>
+
+              {/* Cart Items List */}
+              <div className="p-3 max-h-[340px] overflow-y-auto divide-y divide-slate-100">
+                {cart.length === 0 ? (
+                  <div className="py-10 text-center text-slate-400">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2.5 text-slate-400">
+                      <ShoppingCart className="w-6 h-6 stroke-[1.5]" />
+                    </div>
+                    <p className="font-semibold text-slate-700 text-xs">Keranjang masih kosong</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Klik menu makanan pada katalog untuk menambah porsi belanja.
+                    </p>
+                  </div>
+                ) : (
+                  cart.map((item) => (
+                    <div key={item.id} className="py-2.5 first:pt-0 last:pb-0 flex items-center justify-between gap-2">
+                      {/* Item Details */}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-slate-800 text-xs truncate">
+                          {item.name}
+                        </h4>
+                        <div className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                          <span>{formatRupiah(item.price)}</span>
+                          <span>×</span>
+                          <span className="font-bold text-slate-700">{item.quantity}</span>
+                        </div>
+                      </div>
+
+                      {/* Stepper Controls */}
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        <div className="flex items-center border border-slate-200 rounded-lg bg-slate-50 p-0.5">
+                          <button
+                            type="button"
+                            onClick={() => updateCartQuantity(item.id, -1)}
+                            className="w-5 h-5 flex items-center justify-center text-slate-600 hover:bg-white rounded transition cursor-pointer"
+                            aria-label={`Kurangi ${item.name}`}
+                          >
+                            <Minus className="w-2.5 h-2.5" />
+                          </button>
+                          <span className="w-6 text-center text-xs font-bold text-slate-800">
+                            {item.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => updateCartQuantity(item.id, 1)}
+                            className="w-5 h-5 flex items-center justify-center bg-white shadow-2xs text-slate-800 rounded font-bold hover:bg-slate-100 transition cursor-pointer"
+                            aria-label={`Tambah ${item.name}`}
+                          >
+                            <Plus className="w-2.5 h-2.5" />
+                          </button>
+                        </div>
+
+                        {/* Line Total */}
+                        <div className="w-16 text-right font-extrabold text-[#0f172a] text-xs">
+                          {formatRupiah(item.price * item.quantity)}
+                        </div>
+
+                        {/* Remove Button */}
+                        <button
+                          type="button"
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-slate-400 hover:text-rose-600 p-1 transition cursor-pointer"
+                          aria-label={`Hapus ${item.name} dari pesanan`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Automatic Order Calculation Section */}
+              <div className="p-4 bg-slate-50 border-t border-slate-200 space-y-2 text-xs">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Total Porsi ({cartSummary.totalItemsCount} porsi):</span>
+                  <span className="font-semibold text-slate-800">
+                    {formatRupiah(cartSummary.subtotal)}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-slate-600">
+                  <span className="flex items-center gap-1">
+                    <span>Pajak Resto / PPN:</span>
+                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1 rounded">0% MBG</span>
+                  </span>
+                  <span className="font-semibold text-emerald-600">Rp 0</span>
+                </div>
+
+                <div className="border-t border-slate-200 pt-2 flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700">Subtotal Belanja:</span>
+                  <span className="text-base font-extrabold text-[#0f172a]">
+                    {formatRupiah(cartSummary.finalTotal)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Payment Button - Golden Yellow CTA */}
+              <div className="p-3 bg-white border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  disabled={cart.length === 0}
+                  className="w-full py-3 px-4 bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transform active:scale-98 cursor-pointer"
+                >
+                  <Banknote className="w-4 h-4 stroke-[2.5]" />
+                  <span>Bayar Sekarang ({formatRupiah(cartSummary.finalTotal)})</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </section>
+          </aside>
         </div>
       )}
     </div>
